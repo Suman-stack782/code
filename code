@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+const int INF = INT_MAX;
+
+// Function to implement Floyd-Warshall algorithm
+void floydWarshall(vector<vector<int>>& graph, int V) {
+    vector<vector<int>> dist = graph;
+
+    // Floyd-Warshall logic
+    for (int k = 0; k < V; k++) {
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF && dist[i][j] > dist[i][k] + dist[k][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+
+    // Print the shortest distance matrix
+    cout << "Shortest distances between platforms:\n";
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INF) cout << "INF ";
+            else cout << dist[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+// Function to simulate bridge deployment based on train schedule
+void simulateBridge(int trainArrival, int threshold) {
+    if (trainArrival <= threshold) {
+        cout << "Retract the bridge. Train arriving in " << trainArrival << " minutes.\n";
+    } else {
+        cout << "Deploy the bridge. Safe to cross.\n";
+    }
+}
+
+int main() {
+    // Graph representation: adjacency matrix for platform distances
+    int V = 4; // Number of platforms
+    vector<vector<int>> graph = {
+        {0, 10, INF, INF},
+        {INF, 0, 5, INF},
+        {INF, INF, 0, 1},
+        {INF, INF, INF, 0}
+    };
+
+    floydWarshall(graph, V);
+
+    // Simulating bridge movement
+    int trainArrivalTime = 5; // Minutes to train arrival
+    int threshold = 5;        // Threshold for retracting bridge
+    simulateBridge(trainArrivalTime, threshold);
+
+    return 0;
+}
